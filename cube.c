@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 		logo_start[i] = i * 2;
 
 	setupCallbacks();
-	//pspDebugScreenInit();
+	pspDebugScreenInit();
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
@@ -93,7 +93,8 @@ int main(int argc, char* argv[])
 	sceGuFinish();
 	sceGuSync(0,0);
 
-	//sceDisplayWaitVblankStart();
+	sceDisplayWaitVblankStart();
+	pspDebugScreenPrintf("test");
 	sceGuDisplay(GU_TRUE);
 
 	// run sample

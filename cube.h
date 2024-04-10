@@ -11,8 +11,8 @@
 #include <pspgu.h>
 #include <pspgum.h>
 
-#include "../common/callbacks.h"
-#include "../common/vram.h"
+#include "./common/callbacks.h"
+#include "./common/vram.h"
 
 struct Vertex
 {
