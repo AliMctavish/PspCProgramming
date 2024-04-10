@@ -12,7 +12,7 @@ void (*CreateCube)(struct ScePspFVector3 *position,struct ScePspFVector3 *rotati
 typedef struct Projectile{
 struct ScePspFVector3 *position;
 float speed;
-void (*CreateProjectile)(struct ScePspFVector3 *position);
+//void (*UpdateProjectile)(struct ScePspFVector3 *position);
 }Projectile;
 
 bool IsCollided(struct ScePspFVector3 *object1Pos , struct ScePspFVector3 *object2Pos);

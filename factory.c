@@ -9,7 +9,7 @@ void CreateCube(struct ScePspFVector3 *position,struct ScePspFVector3 *rotation 
 	SetTexture();
 }
 
-void CreateProjectile(struct ScePspFVector3 *position)
+void UpdateProjectile(struct ScePspFVector3 *position)
 {
     struct ScePspFVector3 resize = {1,1,1};
 	SetMatrix();
@@ -54,5 +54,5 @@ void InitCube(Cube *cube)
 
 void InitProjectile(Projectile *projectile)
 {
-	projectile->CreateProjectile = &CreateProjectile;
+	//projectile->UpdateProjectile = &UpdateProjectile;
 }

@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 {
 	int i;
 	for(i = 0 ; i < 64 * 64 * 64 ; i++)
-		logo_start[i] = i * 2;
+		logo_start[i] = i * i * i / (i + 20);
 
 	setupCallbacks();
 	pspDebugScreenInit();
@@ -94,13 +94,14 @@ int main(int argc, char* argv[])
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
-	pspDebugScreenPrintf("test");
 	sceGuDisplay(GU_TRUE);
 
 	// run sample
 	Vector3 vector;
     Cube cube;
-	Projectile projectiles[20];
+
+	//Projectile proj = {malloc(sizeof(struct ScePspFVector3)) ,{2,2,2} ,  }
+
 	Projectile projectile;
 	Projectile projectile2;
 
@@ -141,22 +142,20 @@ int main(int argc, char* argv[])
 		// 	Draw(vertices);
 		// }
 
-
 		if(IsCollided(cube.position , projectile.position))
 		{
 			break;
 			vector.x = 200;
 		}	
 
-		InitProjectile(&projectile);
-		projectile.CreateProjectile(projectile.position);
-
-
+		//InitProjectile(&projectile);
+		UpdateProjectile(projectile.position);
 		Draw(vertices);
 
-		InitProjectile(&projectile2);
+
+		//InitProjectile(&projectile2);
 		projectile2.position->x = 3;
-		projectile2.CreateProjectile(projectile2.position);
+		UpdateProjectile(projectile2.position);
 
 
 		if(IsCollided(cube.position , projectile2.position))

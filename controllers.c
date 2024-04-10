@@ -34,6 +34,6 @@ void Controllers(Vector3 *vector)
 		vector->forward+= 0.1f;
 	}
 	if(pad.Buttons & PSP_CTRL_CROSS) {
-		
+		pspDebugScreenPrintf("the universe is expanding");
 	}
 }
