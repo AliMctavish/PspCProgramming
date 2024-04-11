@@ -1,7 +1,7 @@
 #include "factory.h"
 
-
-void CreateCube(struct ScePspFVector3 *position,struct ScePspFVector3 *rotation ,Vector3 *vector , int number)
+ 
+void CreateCube(Vector3 *position,Vector3 *rotation ,Vector3 *vector , int number)
 {
 	SetMatrix();
 	SetPosition(position,vector,number);
@@ -9,17 +9,17 @@ void CreateCube(struct ScePspFVector3 *position,struct ScePspFVector3 *rotation 
 	SetTexture();
 }
 
-void UpdateProjectile(struct ScePspFVector3 *position)
+void UpdateProjectile(Vector3 *position,float speed)
 {
-    struct ScePspFVector3 resize = {1,1,1};
 	SetMatrix();
-	position->y = 1;
-    position->z +=0.1f;
+    position->z += speed;
 	sceGumTranslate(position);
-	SetTexture();
+	sceGumRotateX(position->z * 0.1f);
+	sceGumRotateY(position->z * 0.1f);
+	SetTexture2();
 }   
 
-bool IsCollided(struct ScePspFVector3 *object1Pos , struct ScePspFVector3 *object2Pos)
+bool IsCollided(Vector3 *object1Pos , Vector3 *object2Pos)
 {
 	float boundaries = 2;
 

@@ -4,14 +4,14 @@
 PSP_MODULE_INFO("Cube Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
-void SetPosition(struct ScePspFVector3 *position,Vector3 *vector , int offset)
+void SetPosition(Vector3 *position,Vector3 *vector , int offset)
 {
     position->x = vector->x + offset;
     position->y = vector->y;
     position->z = vector->forward - 4.5f;
 	sceGumTranslate(position);
 };
-void SetRotation(struct ScePspFVector3* rotation,Vector3* vector)
+void SetRotation(Vector3* rotation,Vector3* vector)
 {
 	rotation->x = vector->rotationX;
 	rotation->y = vector->rotationY;
@@ -24,6 +24,17 @@ void SetTexture()
 {
 		sceGuTexMode(GU_PSM_4444,0,0,0);
 		sceGuTexImage(0,64,64,64,logo_start);
+		sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGBA);
+		//sceGuTexEnvColor(0xffff00);
+		sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+		sceGuTexScale(1.0f,1.0f);
+		sceGuTexOffset(0.0f,0.0f);
+		//sceGuAmbientColor(0xffffffff);
+};
+void SetTexture2()
+{
+		sceGuTexMode(GU_PSM_4444,0,0,0);
+		sceGuTexImage(0,64,64,64,logo_start2);
 		sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGBA);
 		//sceGuTexEnvColor(0xffff00);
 		sceGuTexFilter(GU_LINEAR,GU_LINEAR);
@@ -45,21 +56,18 @@ void SetMatrix()
 		sceGumMatrixMode(GU_MODEL);
 		sceGumLoadIdentity();
 };
-void Draw(struct Vertex* vertices)
+void Draw(Vertex* vertices)
 {
 		sceGumDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_3D,12*3,0,vertices);
 };
-
-#define BUF_WIDTH (512)
-#define SCR_WIDTH (480)
-#define SCR_HEIGHT (272)
-
 
 int main(int argc, char* argv[])
 {
 	int i;
 	for(i = 0 ; i < 64 * 64 * 64 ; i++)
 		logo_start[i] = i * i * i / (i + 20);
+	for(i = 0 ; i < 64 * 64 * 64; i++)
+		logo_start2[i] = 255;
 
 	setupCallbacks();
 	pspDebugScreenInit();
@@ -96,21 +104,26 @@ int main(int argc, char* argv[])
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(GU_TRUE);
 
-	// run sample
 	Vector3 vector;
+
     Cube cube;
+	cube.position = malloc(sizeof(Vector3));
+	cube.rotation = malloc(sizeof(Vector3));
 
-	//Projectile proj = {malloc(sizeof(struct ScePspFVector3)) ,{2,2,2} ,  }
+	Projectile projs[20];
 
-	Projectile projectile;
-	Projectile projectile2;
+	int k;
+	for(k = 0 ; k < 1000 ; k++)
+	{
+		int randomNumberx = rand() % 1000;
+		int randomNumbery = rand() % 1000;
+		int randomNumberz = rand() % -20;
 
-	cube.position = malloc(sizeof(struct ScePspFVector3));
-	cube.rotation = malloc(sizeof(struct ScePspFVector3));
-	projectile.position = malloc(sizeof(struct ScePspFVector3));
-	projectile2.position = malloc(sizeof(struct ScePspFVector3));
-	projectile.position->z = -25.0f;
-	projectile2.position->z = -25.0f;
+		Vector3 vector = {-100 + randomNumberx + -k,-100 + randomNumbery + -k,-100 * randomNumberz};
+		Projectile proj = {vector, 0.6f};
+		projs[k] = proj;
+	}
+
 
 	while(running())
 	{
@@ -119,7 +132,7 @@ int main(int argc, char* argv[])
 		Controllers(&vector);
 
 		// clear screen
-		sceGuClearColor(0xffffff);
+		sceGuClearColor(0x000000);
 		sceGuClearDepth(0);
 		sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 
@@ -127,44 +140,16 @@ int main(int argc, char* argv[])
 		cube.CreateCube(cube.position,cube.rotation,&vector,3);
 		Draw(vertices);
 
-		// int i;
-		// for(i = 0 ; i < sizeof(projectiles) ; i++)
-		// {
-		// 	InitProjectile(&projectile);
-		// 	projectile.CreateProjectile(projectile.position);
-
-		// 	if(IsCollided(cube.position , projectile.position))
-		// 	{
-		// 		break;
-		// 		vector.x = 200;
-		// 	}	
-
-		// 	Draw(vertices);
-		// }
-
-		if(IsCollided(cube.position , projectile.position))
+		int j;
+		for(j = 0 ; j  <  1000 ; j++)
 		{
-			break;
+		UpdateProjectile(&projs[j].position,projs[j].speed);
+		Draw(vertices);
+		if(IsCollided(cube.position , &projs[j].position))
+		{
 			vector.x = 200;
 		}	
-
-		//InitProjectile(&projectile);
-		UpdateProjectile(projectile.position);
-		Draw(vertices);
-
-
-		//InitProjectile(&projectile2);
-		projectile2.position->x = 3;
-		UpdateProjectile(projectile2.position);
-
-
-		if(IsCollided(cube.position , projectile2.position))
-		{
-			break;
-			vector.x = 200;
-		}	
-
-		Draw(vertices);
+		}
 
 		sceGuFinish();
 		sceGuSync(0,0);
@@ -172,11 +157,8 @@ int main(int argc, char* argv[])
 		sceDisplayWaitVblankStart();
 		sceGuSwapBuffers();
 	}
-
 	free(cube.position);
 	free(cube.rotation);
-	free(projectile.position);
-	free(projectile2.position);
 	sceGuTerm();
 
 	sceKernelExitGame();

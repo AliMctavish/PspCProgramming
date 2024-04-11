@@ -1,6 +1,6 @@
 #include "data.h"
 
-struct Vertex __attribute__((aligned(16))) vertices[12*3] =
+Vertex __attribute__((aligned(16))) vertices[12*3] =
 {
 	{0, 0, 5,-1,-1, 1}, // 0
 	{1, 0, 5,-1, 1, 1}, // 4

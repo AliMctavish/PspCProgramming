@@ -4,20 +4,20 @@
 
 
 typedef struct Cube{
-struct ScePspFVector3 *position;
-struct ScePspFVector3 *rotation;
-void (*CreateCube)(struct ScePspFVector3 *position,struct ScePspFVector3 *rotation ,Vector3 *vector , int number);
+Vector3 *position;
+Vector3 *rotation;
+void (*CreateCube)(Vector3 *position,Vector3 *rotation ,Vector3 *vector , int number);
 } Cube;
 
 typedef struct Projectile{
-struct ScePspFVector3 *position;
+Vector3 position;
 float speed;
-//void (*UpdateProjectile)(struct ScePspFVector3 *position);
+//void (*UpdateProjectile)(Vector3 *position);
 }Projectile;
 
-bool IsCollided(struct ScePspFVector3 *object1Pos , struct ScePspFVector3 *object2Pos);
-void CreateCube(struct ScePspFVector3 *position,struct ScePspFVector3 *rotation ,Vector3 *vector , int number);
-void CreateProjectile(struct ScePspFVector3 *position);
+bool IsCollided(Vector3 *object1Pos , Vector3 *object2Pos);
+void CreateCube(Vector3 *position,Vector3 *rotation ,Vector3 *vector , int number);
+void UpdateProjectile(Vector3 *position,float speed);
 void InitCube(Cube *cube);
 void InitProjectile(Projectile *projectile);
 void Controllers(Vector3* vector);
