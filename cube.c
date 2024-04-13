@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 {
 	int i;
 	for(i = 0 ; i < 64 * 64 * 64 ; i++)
-		logo_start[i] = i * i * i / (i + 20);
+		logo_start[i] = i * i * i;
 	for(i = 0 ; i < 64 * 64 * 64; i++)
 		logo_start2[i] = 255;
 
@@ -100,27 +100,43 @@ int main(int argc, char* argv[])
 	sceGuEnable(GU_CLIP_PLANES);
 	sceGuFinish();
 	sceGuSync(0,0);
-
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(GU_TRUE);
 
 	Vector3 vector;
-
     Cube cube;
 	cube.position = malloc(sizeof(Vector3));
 	cube.rotation = malloc(sizeof(Vector3));
+	int numberOfStars = 20;
+	const int numberOfStarsInBackGround = 300;
+	Projectile projs[numberOfStars];
+	Projectile backgroundStars[numberOfStarsInBackGround];
 
-	Projectile projs[20];
+	int j;
+	for(j = 0 ; j < numberOfStarsInBackGround ; j++)
+	{
+		int randomNumberx = rand() % numberOfStarsInBackGround;
+		int randomNumbery = rand() % numberOfStarsInBackGround;
+		int randomNumberz = rand() % -10;
+
+		Vector3 vector = {(-numberOfStarsInBackGround/2 + randomNumberx),
+						  (-numberOfStarsInBackGround/2 + randomNumbery),
+						   -100 * randomNumberz};
+		Projectile proj = {vector, 0.6f};
+		backgroundStars[j] = proj;
+	}
 
 	int k;
-	for(k = 0 ; k < 1000 ; k++)
+	for(k = 0 ; k < numberOfStars ; k++)
 	{
-		int randomNumberx = rand() % 1000;
-		int randomNumbery = rand() % 1000;
+		int randomNumberx = rand() % 10;
+		int randomNumbery = rand() % 10;
 		int randomNumberz = rand() % -20;
 
-		Vector3 vector = {-100 + randomNumberx + -k,-100 + randomNumbery + -k,-100 * randomNumberz};
-		Projectile proj = {vector, 0.6f};
+		Vector3 vector = {(randomNumberx - 5),
+						  (randomNumbery - 5),
+						   -100 * randomNumberz};
+		Projectile proj = {vector, 1};
 		projs[k] = proj;
 	}
 
@@ -141,14 +157,23 @@ int main(int argc, char* argv[])
 		Draw(vertices);
 
 		int j;
-		for(j = 0 ; j  <  1000 ; j++)
+		for(j = 0 ; j  <  numberOfStars ; j++)
 		{
-		UpdateProjectile(&projs[j].position,projs[j].speed);
+		UpdateProjectile(&projs[j]);
 		Draw(vertices);
+
 		if(IsCollided(cube.position , &projs[j].position))
 		{
 			vector.x = 200;
 		}	
+		}
+
+		//background objects
+		int k;
+		for(k = 0 ; k < numberOfStarsInBackGround ; k++)
+		{
+			UpdateBackground(&backgroundStars[k].position,backgroundStars[k].speed,numberOfStarsInBackGround);
+			Draw(vertices);
 		}
 
 		sceGuFinish();

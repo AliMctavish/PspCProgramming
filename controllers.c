@@ -22,8 +22,8 @@ void Controllers(Vector3 *vector)
 		vector->rotationX+= 0.1f;
 	}
 	if (pad.Buttons & PSP_CTRL_SQUARE) {
-		vector->rotationX-= 0.1f;
 	}
+		vector->rotationX-= 0.05f;
 	if (pad.Buttons & PSP_CTRL_RTRIGGER) {
 		vector->rotationY+= 0.1f;	
 	}

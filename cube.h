@@ -14,10 +14,10 @@
 #include "common/callbacks.h"
 #include "common/vram.h"
 
-#define print(x)  pspDebugScreenPrintf(x)
+#define print(x) pspDebugScreenPrintf(x)
 #define printv(floatVal)  pspDebugScreenPrintf("%f",floatVal)
-#define printi(integerVal)  pspDebugScreenPrintf("%i",integerVal)
-#define printd(doubleVal)  pspDebugScreenPrintf("%d",doubleVal)
+#define printi(integerVal) pspDebugScreenPrintf("%i",integerVal)
+#define printd(doubleVal) pspDebugScreenPrintf("%d",doubleVal)
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
 #define SCR_HEIGHT (272)
