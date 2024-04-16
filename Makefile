@@ -1,5 +1,6 @@
 TARGET = cube
 OBJS = cube.o factory.o data.o controllers.o logo.o common/callbacks.o common/vram.o
+PSPLIBSDIR = $(PSPSDK)/..
 
 INCDIR =
 CFLAGS = -G0 -Wall
